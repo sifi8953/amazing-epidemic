@@ -1,6 +1,6 @@
 from gillespie import SSA
 from rk4 import solve_ivp
-from seir_model import prop, stoch, coeff, X0
+from seird_model import prop, stoch, coeff, X0, LABELS
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,14 +10,15 @@ h = 0.1
 N = 1000
 I0 = 5
 
-ALPHA = 0.3
+ALPHA = 0.5
 BETA = 0.3
 GAMMA = 1/7
+MU = 1/70
 
 tspan = [0, 120]
 
 x0 = X0(N, I0)
-c = coeff(ALPHA, BETA, GAMMA)
+c = coeff(ALPHA, BETA, GAMMA, MU)
 
 
 def ODE_from_stoch(prop, stoch, coeff):
@@ -25,11 +26,11 @@ def ODE_from_stoch(prop, stoch, coeff):
     return lambda t, X: prop(X, coeff) @ sMat
 
 
-def plot(t, S, I, R):
-    plt.plot(t, S, label="Susceptible")
-    plt.plot(t, E, label="Exposed")
-    plt.plot(t, I, label="Infectious")
-    plt.plot(t, R, label="Resistant")
+def plot_sol(sol, labels):
+    t, y = sol
+    y = np.transpose(y)
+    for points, label in zip(y, labels, strict=True):
+        plt.plot(t, points, label=label)
     plt.xlabel("time")
     plt.ylabel("population")
     plt.legend()
@@ -37,15 +38,12 @@ def plot(t, S, I, R):
 
 
 f = ODE_from_stoch(prop, stoch, c)
-t, y = solve_ivp(f, tspan, x0, h)
-S, E, I, R = np.transpose(y)
+sol = solve_ivp(f, tspan, x0, h)
 plt.figure(1)
-plot(t, S, I, R)
+plot_sol(sol, LABELS)
 
-
-t, y = SSA(prop, stoch, x0, tspan, c)
-S, E, I, R = np.transpose(y)
+sol = SSA(prop, stoch, x0, tspan, c)
 plt.figure(2)
-plot(t, S, I, R)
+plot_sol(sol, LABELS)
 
 plt.show()

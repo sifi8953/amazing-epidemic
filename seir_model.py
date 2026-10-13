@@ -8,7 +8,7 @@ import numpy as np
 
 def prop(X, coeff):
     S, E, I, R = X
-    N = np.sum(X)
+    N = S + E + I + R
     return coeff * np.array([E, I/N*S, I])
 
 
@@ -27,3 +27,6 @@ def coeff(alpha, beta, gamma):
 
 def X0(N, I0):
     return np.array([N - I0, 0, I0, 0])
+
+
+LABELS = ["Susceptible", "Exposed", "Infectious", "Resistant"]
