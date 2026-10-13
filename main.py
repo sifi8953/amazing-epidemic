@@ -1,6 +1,6 @@
 from gillespie import SSA
 from rk4 import solve_ivp
-from seird_model import prop, stoch, coeff, X0, LABELS
+from vaccine_model import prop, stoch, coeff, X0, LABELS
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,11 +14,12 @@ ALPHA = 0.5
 BETA = 0.3
 GAMMA = 1/7
 MU = 1/70
+V = 2
 
 tspan = [0, 120]
 
 x0 = X0(N, I0)
-c = coeff(ALPHA, BETA, GAMMA, MU)
+c = coeff(ALPHA, BETA, GAMMA, MU, V)
 
 
 def ODE_from_stoch(prop, stoch, coeff):
@@ -41,9 +42,11 @@ f = ODE_from_stoch(prop, stoch, c)
 sol = solve_ivp(f, tspan, x0, h)
 plt.figure(1)
 plot_sol(sol, LABELS)
+plt.savefig("ode.png")
 
 sol = SSA(prop, stoch, x0, tspan, c)
 plt.figure(2)
 plot_sol(sol, LABELS)
+plt.savefig("ssa.png")
 
 plt.show()

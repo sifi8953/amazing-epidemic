@@ -27,4 +27,4 @@ def X0(N, I0):
     return np.array([N - I0, I0, 0])
 
 
-LABELS = ["Susceptible", "Infectious", "Resistant"]
+LABELS = ["Susceptible", "Infectious", "Recovered"]
