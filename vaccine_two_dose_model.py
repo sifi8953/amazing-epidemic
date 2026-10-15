@@ -1,8 +1,8 @@
 import numpy as np
 
-#coeff = [alpha, beta, gamma, mu, omega, sigma_1, sigma_2, v_1, v_2]
+# coeff = [alpha, beta, gamma, mu, omega, sigma_1, sigma_2, v_1, v_2]
 
-#C = beta*I/N
+# C = beta*I/N
 
 # E -> I (alpha*E)
 # S -> E (C*S)
@@ -17,7 +17,7 @@ import numpy as np
 
 def prop(X, coeff):
     S, E, I, R, D, V_1, V_2 = X
-    N = S + E + I + R + V_1 + V_2
+    N = np.sum(X)  # number of dead count toward population
     ALPHA, BETA, GAMMA, MU, OMEGA, SIGMA_1, SIGMA_2, v_1, v_2 = coeff
     C = BETA * I / N
     return np.array([ALPHA * E, C * S, GAMMA * I, MU * I, OMEGA * C * R,
@@ -26,7 +26,7 @@ def prop(X, coeff):
 
 def stoch():
     return np.array([
-        # S  E  I  R  D  V_1 V_2 
+        # S  E  I  R  D  V_1 V_2
         [0, -1, 1, 0, 0, 0, 0],
         [-1, 1, 0, 0, 0, 0, 0],
         [0, 0, -1, 1, 0, 0, 0],
