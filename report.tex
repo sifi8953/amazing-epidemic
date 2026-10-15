@@ -21,7 +21,22 @@
 \section{Model}
 
 \section{Metod}
-
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Modell.png}
+    \caption{Smittspridning med två vaccinationsdoser}
+\end{figure}
+Utifrån folkhälsomyndighetens rapport %\cite{fmh}todo
+har vi nu utökat modellen med en andra vaccindos. Denna modell adderar tillstånden $V_1(t)$ samt $V_2(t)$ som beskriver antalet vaccinerade men en respektive två doser av vaccinet. $V_1$ beror som tidigare på en konstant vaccinationshastighet $v_1$. Till skillnad från förra modellen antas vaccinet inte längre ge ett fullt skydd, därför introduceras parametrarna $\sigma_1$, $\sigma_2$ som beskriver andelen immuna efter respektive vaccin. Utöver detta har vi även adderat så att en andel $\omega$ av tillfrisknade individer kan bli smittade igen. Modellen kan beskrivas med ekvationerna:
+\\
+\\
+$S'(t) =-\beta\frac{I(t)}{N}S(t)-v_1$\\
+$E'(t)=\beta\frac{I(t)}{N}S(t)-\alpha E(t)+(1-\sigma_1)\beta\frac{I(t)}{N}V_1(t)+(1-\sigma_2)\beta\frac{I(t)}{N}V_2(t)+\omega\beta\frac{I(t)}{N}R(t)$\\
+$I'(t)=\alpha E(t)-\gamma I(t)-\mu I(t)$\\
+$R'(t)=\gamma I(t)-\omega\beta\frac{I(t)}{N}R(t)$\\
+$D'(t)=\mu I(t)$\\
+$V_1'(t)=v_1-v_2V_1(t)-(1-\sigma_1)\beta\frac{I(t)}{N}V_1(t)$\\
+$V_2'(t)=v_2V_1(t)-(1-\sigma_2)\beta\frac{I(t)}{N}V_2(t)$\\
 \section{Resultat} % experimentera med parametrar + plots
 
 \section{Argumentation} % är modellen/metoden bra/säker
