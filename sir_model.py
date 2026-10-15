@@ -7,7 +7,7 @@ import numpy as np
 
 def prop(X, coeff):
     S, I, R = X
-    N = S + I + R
+    N = np.sum(X)
     return coeff * np.array([I/N*S, I])
 
 

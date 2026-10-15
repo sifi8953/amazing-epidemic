@@ -10,7 +10,7 @@ import numpy as np
 
 def prop(X, coeff):
     S, E, I, R, D, V = X
-    N = S + E + I + R + V
+    N = np.sum(X)  # number of dead count toward population
     return coeff * np.array([E, I/N*S, I, I, 1])
 
 

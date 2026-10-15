@@ -29,6 +29,8 @@ c = coeff(ALPHA, BETA, GAMMA, MU, OMEGA, SIGMA_1, SIGMA_2, V_1, V_2)
 
 
 def ODE_from_stoch(prop, stoch, coeff):
+    # avoid having to define all terms twice by using
+    # the stochastic model terms to reconstruct the ODE
     sMat = stoch()
     return lambda t, X: prop(X, coeff) @ sMat
 

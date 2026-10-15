@@ -3,6 +3,7 @@
 \usepackage{subcaption} % For subfigures environment
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{mathtools}
 % \usepackage{minted} % For code with syntax highlighting
 \usepackage[swedish]{babel}
 
@@ -10,15 +11,125 @@
 \author{Hannes Bengtsson, Simon Fikse, Zaidoun Younis-Khalid}
 \date{September 2026}
 
-\newcommand{\bfbar}[1]{\ensuremath{\mathbf{\bar{#1}}}}
-
 \begin{document}
 
 \maketitle
 \tableofcontents
 \newpage
 
-\section{Model}
+\section{Modell}
+
+Fyra modeller har implementerats och testats. Dessa är SIR-modellen, SEIR-modellen, SEIRD-modellen och en vaccinationsmodell. Deterministiska formuleringar för dem är givna och utifrån dessa har stokastiska formuleringar framtagits. Vi betecknar reaktionerna \(r_i\), tillståndsvektorn \(x\), stökiometrimatrisen \(M\) och propensitetsvektorn \(a\).
+
+\subsection{SIR-modellen}
+Det givna systemet av ODE:er lyder:
+\begin{align*}
+    N     & = S(t) + I(t) + R(t)                      \\
+    S'(t) & = -\beta \frac{I(t)}{N} S(t)              \\
+    I'(t) & = \beta \frac{I(t)}{N} S(t) - \gamma I(t) \\
+    R'(t) & = \gamma I(t)                             \\
+\end{align*}
+Detta ger reaktionerna:
+\begin{align*}
+    r_1: \qquad & S \xrightarrow{\beta \frac{I(t)}{N} S(t)} I \\
+    r_2: \qquad & I \xrightarrow{\gamma I(t)} R               \\
+\end{align*}
+Viket i sin tur ger:
+\begin{align*}
+    x(t) & = \begin{bmatrix} S & I & R \end{bmatrix}                      \\
+    M    & = \begin{bmatrix}
+                 -1 & 1  & 0 \\
+                 0  & -1 & 1 \\
+             \end{bmatrix}                                               \\
+    a(x) & = \begin{bmatrix} \beta \frac{I}{N} S & \gamma I \end{bmatrix} \\
+\end{align*}
+
+\subsection{SEIR-modellen}
+Det givna systemet av ODE:er lyder:
+\begin{align*}
+    N     & = S(t) + E(t) + I(t) + R(t)               \\
+    S'(t) & = -\beta \frac{I(t)}{N} S(t)              \\
+    E'(t) & = \beta \frac{I(t)}{N} S(t) - \alpha E(t) \\
+    I'(t) & = \alpha E(t) - \gamma I(t)               \\
+    R'(t) & = \gamma I(t)                             \\
+\end{align*}
+Detta ger reaktionerna:
+\begin{align*}
+    r_1: \qquad & E \xrightarrow{\alpha E(t)} I               \\
+    r_2: \qquad & S \xrightarrow{\beta \frac{I(t)}{N} S(t)} E \\
+    r_3: \qquad & I \xrightarrow{\gamma I(t)} R               \\
+\end{align*}
+Viket i sin tur ger:
+\begin{align*}
+    x(t) & = \begin{bmatrix} S & E & I & R \end{bmatrix}                                \\
+    M    & = \begin{bmatrix}
+                 0  & -1 & 1  & 0 \\
+                 -1 & 1  & 0  & 0 \\
+                 0  & 0  & -1 & 1 \\
+             \end{bmatrix}                                                           \\
+    a(x) & = \begin{bmatrix} \alpha E(t) & \beta \frac{I}{N} S & \gamma I \end{bmatrix} \\
+\end{align*}
+\subsection{SEIRD-modellen}
+Det givna systemet av ODE:er lyder:
+\begin{align*}
+    N     & = S(t) + E(t) + I(t) + R(t) + D(t)        \\
+    S'(t) & = -\beta \frac{I(t)}{N} S(t)              \\
+    E'(t) & = \beta \frac{I(t)}{N} S(t) - \alpha E(t) \\
+    I'(t) & = \alpha E(t) - \gamma I(t) - \mu I(t)    \\
+    R'(t) & = \gamma I(t)                             \\
+    D'(t) & = \mu I(t)                                \\
+\end{align*}
+Detta ger reaktionerna:
+\begin{align*}
+    r_1: \qquad & E \xrightarrow{\alpha E(t)} I               \\
+    r_2: \qquad & S \xrightarrow{\beta \frac{I(t)}{N} S(t)} E \\
+    r_3: \qquad & I \xrightarrow{\gamma I(t)} R               \\
+    r_4: \qquad & I \xrightarrow{\mu I(t)} D                  \\
+\end{align*}
+Viket i sin tur ger:
+\begin{align*}
+    x(t) & = \begin{bmatrix} S & E & I & R & D \end{bmatrix}                                    \\
+    M    & = \begin{bmatrix}
+                 0  & -1 & 1  & 0 & 0 \\
+                 -1 & 1  & 0  & 0 & 0 \\
+                 0  & 0  & -1 & 1 & 0 \\
+                 0  & 0  & -1 & 0 & 1 \\
+             \end{bmatrix}                                                               \\
+    a(x) & = \begin{bmatrix} \alpha E(t) & \beta \frac{I}{N} S & \gamma I & \mu I \end{bmatrix} \\
+\end{align*}
+
+\subsection{Vaccinationsmodell}
+Det givna systemet av ODE:er lyder:
+\begin{align*}
+    N     & = S(t) + E(t) + I(t) + R(t) + D(t) + V(t) \\
+    S'(t) & = -\beta \frac{I(t)}{N} S(t) - v          \\
+    E'(t) & = \beta \frac{I(t)}{N} S(t) - \alpha E(t) \\
+    I'(t) & = \alpha E(t) - \gamma I(t) - \mu I(t)    \\
+    R'(t) & = \gamma I(t)                             \\
+    D'(t) & = \mu I(t)                                \\
+    V'(t) & = v                                       \\
+\end{align*}
+Detta ger reaktionerna:
+\begin{align*}
+    r_1: \qquad & E \xrightarrow{\alpha E(t)} I               \\
+    r_2: \qquad & S \xrightarrow{\beta \frac{I(t)}{N} S(t)} E \\
+    r_3: \qquad & I \xrightarrow{\gamma I(t)} R               \\
+    r_4: \qquad & I \xrightarrow{\mu I(t)} D                  \\
+    r_5: \qquad & S \xrightarrow{v} V                         \\
+\end{align*}
+Viket i sin tur ger:
+\begin{align*}
+    x(t) & = \begin{bmatrix} S & E & I & R & D & V \end{bmatrix}                                    \\
+    M    & = \begin{bmatrix}
+                 0  & -1 & 1  & 0 & 0 & 0 \\
+                 -1 & 1  & 0  & 0 & 0 & 0 \\
+                 0  & 0  & -1 & 1 & 0 & 0 \\
+                 0  & 0  & -1 & 0 & 1 & 0 \\
+                 -1 & 0  & 0  & 0 & 0 & 1 \\
+             \end{bmatrix}                                                               \\
+    a(x) & = \begin{bmatrix} \alpha E(t) & \beta \frac{I}{N} S & \gamma I & \mu I & v \end{bmatrix} \\
+\end{align*}
+
 
 \section{Metod}
 \begin{figure}[h]
