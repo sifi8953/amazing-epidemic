@@ -4,7 +4,7 @@ import numpy as np
 # E -> I (alpha*E)
 # S -> E (beta*I/N*S)
 # I -> R (gamma*I)
-# I -> D (gamma*I)
+# I -> D (mu*I)
 # S -> V (v)
 
 
