@@ -4,12 +4,15 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{mathtools}
+\usepackage{float}
 % \usepackage{minted} % For code with syntax highlighting
 \usepackage[swedish]{babel}
 
 \title{Epidemimodell}
 \author{Hannes Bengtsson, Simon Fikse, Zaidoun Younis-Khalid}
 \date{September 2026}
+
+
 
 \begin{document}
 
@@ -132,7 +135,7 @@ Viket i sin tur ger:
 \subsection{Egen modell}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Modell.png}
+    \includegraphics[width=0.6\linewidth]{img/Modell.png}
     \caption{Smittspridning med två vaccinationsdoser}
 \end{figure}
 Utifrån folkhälsomyndighetens rapport %\cite{fhm}todo
@@ -188,6 +191,223 @@ Notera att i processen av att översätta en deterministisk formulering till en 
 \section{Metod}
 
 \section{Resultat} % experimentera med parametrar + plots
+I alla simuleringar användes parametrarna:
+\begin{align*}
+    \alpha & = 0.5 \\ 
+    \gamma & = \frac{1}{7} \\ 
+    \mu & = \frac{1}{70} \\ 
+    \omega & = 0.5 \\
+    \sigma_1 & = 0.564 \\
+    \sigma_2 & = 0.6 \\
+\end{align*}
+Simuleringarna kördes med en population $N=1000$ samt antalet smittade vid början $I(0)=5$. Simuleringarna kördes till $t=120$
+
+\subsection{Social distansiering}
+Vi undersöker hur parametern $\beta$ påverkar simulering av den egna modellen. Modellen körs med tre värden på $\beta$ som motsvarar olika nivåer av social distansiering, där $\beta=0.3$ antas vara den normala nivån.
+\begin{figure}[h]
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode1.png}
+        \caption{$\beta=0.3$}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode2.png}
+        \caption{$\beta=0.25$}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode3.png}
+        \caption{$\beta=0.2$}
+    \end{subfigure}
+    \caption{ODE vid olika $\beta$}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa1.png}
+        \caption{$\beta=0.3$}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa2.png}
+        \caption{$\beta=0.25$}
+    \end{subfigure}
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa3.png}
+        \caption{$\beta=0.2$}
+    \end{subfigure}
+    \caption{100 simulering av modell vid olika $\beta$}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Maximalt antal smittade vid körning med olika parametrar}
+    \begin{tabular}{c | c | c | c}
+        $\beta$ & ODE & Medelvärde & Varians\\
+        \hline
+        0.3 & 162.2 & 174.5 & 1203.9\\
+        0.25 & 99.2 & 107.6 & 1167.0\\
+        0.2 & 34.7 & 36.3 & 680.1\\
+    \end{tabular}  
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Totalt antal avlidna vid körning med olika parametrar}
+    \begin{tabular}{c | c | c | c}
+        $\beta$ & ODE & Medelvärde & Varians\\
+        \hline
+        0.3 & 146.2 & 136.9 & 855.7\\
+        0.25 & 97.0 & 82.2 & 1009.8\\
+        0.2 & 33.1 & 26.4 & 475.5\\
+    \end{tabular}  
+\end{table}
+\subsection{Vaccin}
+Vi undersöker hur vaccinationstakten $v_1$ och $v_2$ påverkar simulering av den egna modellen. Modellen körs med olika värden på parametrarna.
+\begin{figure}[h]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode4.png}
+        \caption{$v_1=2$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode5.png}
+        \caption{$v_1=5$}
+    \end{subfigure}
+    \caption{ODE för första vaccinationsdosen vid olika $v_1$}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa4.png}
+        \caption{$v_1=2$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa5.png}
+        \caption{$v_1=5$}
+    \end{subfigure}
+    \caption{Simuleringar för första vaccinationsdosen vid olika $v_1$}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode6.png}
+        \caption{$v_1=0.1$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode7.png}
+        \caption{$v_1=0.2$}
+    \end{subfigure}
+    \caption{ODE för andra vaccinationsdosen vid olika $v_2$, med $v_1=2$}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa6.png}
+        \caption{$v_2=0.1$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa7.png}
+        \caption{$v_2=0.2$}
+    \end{subfigure}
+    \caption{Simuleringar för andra vaccinationsdosen vid olika $v_2$, med $v_1=2$}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Maximalt antal smittade vid körning med olika parametrar}
+    \begin{tabular}{c  c| c | c | c}
+        $v_1$ & $v_2$ & ODE & Medelvärde & Varians\\
+        \hline
+        2 & 0 & 140.5 & 146.8 & 1327.3\\
+        5 & 0 & 108.6 & 112.0 & 1525.7\\
+        2 & 0.1& 139.2 & 147.6 & 1332.5\\
+        2 & 0.2& 139.0 & 147.3 & 1538.1
+    \end{tabular}  
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Antal avlidna vid körning med olika parametrar}
+    \begin{tabular}{c  c| c | c | c}
+        $v_1$ & $v_2$ & ODE & Medelvärde & Varians\\
+        \hline
+        2 & 0 & 127.8 & 118.7 & 873.1\\
+        5 & 0 & 99.0 & 97.4 & 1332.8\\
+        2 & 0.1& 126.3 & 118.5 & 880.1\\
+        2 & 0.2& 126.2 & 117.6 & 1063.4
+    \end{tabular}  
+\end{table}
+\subsection{Kombination}
+Vi undersöker hur vaccinationstakten $v_1$ och $v_2$ samt social distasiering påverkar simulering av den egna modellen. Modellen körs med olika värden på parametrarna.
+
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode8.png}
+        \caption{$v_1=2$, $v_2=0$, $\beta=0.25$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode9.png}
+        \caption{$v_1=2$, $v_2=0$, $\beta=0.2$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode10.png}
+        \caption{$v_1=5$, $v_2=0$, $\beta=0.25$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ode11.png}
+        \caption{$v_1=2$, $v_2=0.2$, $\beta=0.25$}
+    \end{subfigure}
+    \caption{ODE vid olika $v_2$, $v_1$, $\beta$}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa8.png}
+        \caption{$v_1=2$, $v_2=0$, $\beta=0.25$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa9.png}
+        \caption{$v_1=2$, $v_2=0$, $\beta=0.2$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa10.png}
+        \caption{$v_1=5$, $v_2=0$, $\beta=0.25$}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{img/ssa11.png}
+        \caption{$v_1=2$, $v_2=0.2$, $\beta=0.25$}
+    \end{subfigure}
+    \caption{100 simuleringar vid olika $v_2$, $v_1$, $\beta$}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Maximalt antal smittade vid körning med olika parametrar}
+    \begin{tabular}{c  c c| c | c | c}
+        $v_1$ & $v_2$ & $\beta$& ODE & Medelvärde & Varians\\
+        \hline
+        2 & 0 & 0.25& 76.0 & 78.6 & 855.3\\
+        2 & 0 & 0.2& 18.3 & 23.4 & 272.3\\
+        5 & 0 & 0.25& 47.2 & 43.9 & 824.1\\
+        2 & 0.2 & 0.25& 44.9 & 44.9 & 795.4\\
+    \end{tabular}  
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Maximalt antal smittade vid körning med olika parametrar}
+    \begin{tabular}{c  c c| c | c | c}
+        $v_1$ & $v_2$ & $\beta$& ODE & Medelvärde & Varians\\
+        \hline
+        2 & 0 & 0.25& 77.0 & 63.6 & 727.5\\
+        2 & 0 & 0.2& 22.2 & 16.8 & 218.0\\
+        5 & 0 & 0.25& 49.8 & 35.1 & 637.0\\
+        2 & 0.2 & 0.25& 47.3 & 34.2 & 498.6\\
+    \end{tabular}  
+\end{table}
+
+
+
+
+
 
 \section{Argumentation} % är modellen/metoden bra/säker
 
